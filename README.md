@@ -1,5 +1,5 @@
 # speech related service
 
-## speech to txt
+## audio to txt
 
 ## video to txt

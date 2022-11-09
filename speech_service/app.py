@@ -22,7 +22,9 @@ def index():
 def audio_to_txt():
     msg = request.get_json()
     logger.info("recv audio_to_txt {}", msg)
-    ...
+    url = msg["url"]
+    file_name = msg["file_name"]
+    return "ok"
 
 
 @app.route(API_PREFIX + '/async_audio_to_txt', methods=['POST'])
