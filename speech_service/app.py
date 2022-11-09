@@ -14,13 +14,27 @@ setup_logging()
 
 
 @app.route(API_PREFIX + "/")
-def hello_world():
-    return "<p>hello wechat backend</p>"
+def index():
+    return "<p>hello speech service</p>"
 
 
-@app.route('/sync_audio_to_txt', methods=['POST'])
-def sync_audio_to_txt():
+@app.route(API_PREFIX + '/audio_to_txt', methods=['POST'])
+def audio_to_txt():
     msg = request.get_json()
-    logger.info("recv sync_audio_to_txt {}", msg)
-    if 'data' not in msg:
-        return "init"
+    logger.info("recv audio_to_txt {}", msg)
+    ...
+
+
+@app.route(API_PREFIX + '/async_audio_to_txt', methods=['POST'])
+def async_audio_to_txt():
+    msg = request.get_json()
+    logger.info("recv async_audio_to_txt {}", msg)
+    ...
+
+
+@app.route(API_PREFIX + '/async_video_to_txt', methods=['POST'])
+def async_video_to_txt():
+    msg = request.get_json()
+    logger.info("recv async_video_to_txt {}", msg)
+    ...
+
