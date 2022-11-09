@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "speech-service"
+version = "0.1.0"
+description = ""
+authors = ["xbkaishui <xbkaishui@126.com>"]
+readme = "README.md"
+packages = [{include = "speech_service"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.2.2"
+loguru = "^0.6.0"
+moviepy = "^1.0.3"
+pydub = "^0.25.1"
+paddlepaddle = "^2.3.2"
+starlette = "^0.21.0"
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "http://mirrors.aliyun.com/pypi/simple"
+default = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
