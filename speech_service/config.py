@@ -14,5 +14,7 @@ DEBUG: bool = config("DEBUG", cast=bool, default=False)
 
 LOG_PATH: str = config("LOG_PATH", cast=str, default="logs")
 
+DATA_DIR = config("DATA_DIR", cast=str, default="data")
+
 if platform == "darwin":
     ...

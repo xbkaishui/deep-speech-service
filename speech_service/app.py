@@ -7,10 +7,14 @@ import json
 import requests
 from speech_service.logging import setup_logging
 from speech_service.config import API_PREFIX
+from .service.audio_asr import AudioService
+from .model import AudioInfo, Response
 
 app = Flask(__name__)
 
 setup_logging()
+
+audioService = AudioService()
 
 
 @app.route(API_PREFIX + "/")
@@ -24,7 +28,8 @@ def audio_to_txt():
     logger.info("recv audio_to_txt {}", msg)
     url = msg["url"]
     file_name = msg["file_name"]
-    return "ok"
+    resp = audioService.audio_to_txt(AudioInfo(url, file_name))
+    return resp.to_json()
 
 
 @app.route(API_PREFIX + '/async_audio_to_txt', methods=['POST'])
