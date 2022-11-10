@@ -6,5 +6,5 @@
 
 
 ### fix no-module-named-pkg-resources
-pip install --upgrade setuptools
-pip install --upgrade distribute 
+- pip install --upgrade setuptools
+- pip install --upgrade distribute 
