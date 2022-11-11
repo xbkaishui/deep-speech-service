@@ -15,6 +15,7 @@ import paddle
 from paddlespeech.cli.asr.infer import ASRExecutor
 from paddlespeech.cli.text.infer import TextExecutor
 from datetime import datetime
+import multiprocessing as mp
 
 
 """
@@ -61,25 +62,30 @@ def split(file: str, seconds_per_split_file: int):
     return slice_files
 
 
-def audio2txt(filelist):
+def asr_to_txt(file):
     asr_executor = ASRExecutor()
     text_executor = TextExecutor()
-    words = []
-    for file in filelist:
-        logger.info("audio to txt {}", file)
-        text = asr_executor(
-            audio_file=file,
+    logger.info("audio to txt {}", file)
+    text = asr_executor(
+        audio_file=file,
+        device=paddle.get_device())
+    if text:
+        result = text_executor(
+            text=text,
+            task='punc',
+            model='ernie_linear_p3_wudao',
             device=paddle.get_device())
-        if text:
-            result = text_executor(
-                text=text,
-                task='punc',
-                model='ernie_linear_p3_wudao',
-                device=paddle.get_device())
-        else:
-            result = text
-        # logger.info(result)
-        words.append(result)
+    else:
+        result = text
+    return result
+
+
+def audio2txt(filelist):
+    # 并行计算
+    num_cores = int(mp.cpu_count() / 2)
+    pool = mp.Pool(num_cores)
+    words = pool.map(asr_to_txt, filelist)
+    pool.close()
     return words
 
 
@@ -110,7 +116,7 @@ class AudioService(object):
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
-        words = audio2txt(file_segments[0:])
+        words = audio2txt(file_segments[0:3])
         all_text = "".join(words)
         logger.info("end audio to text")
         for file in file_segments:
