@@ -109,8 +109,9 @@ class AudioService(object):
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
-        words = audio2txt(file_segments[0:1])
+        words = audio2txt(file_segments[0:2])
+        all_text = "".join(words)
         logger.info("end audio to text")
         for file in file_segments:
             os.remove(file)
-        return Response(200, words[0])
+        return Response(200, all_text)

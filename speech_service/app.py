@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from flask import Flask
+from flask import Flask, jsonify
 from loguru import logger
 from flask import request
 import json
@@ -11,6 +11,7 @@ from .service.audio_asr import AudioService
 from .model import AudioInfo, Response
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 setup_logging()
 
@@ -29,7 +30,7 @@ def audio_to_txt():
     url = msg["url"]
     file_name = msg["file_name"]
     resp = audioService.audio_to_txt(AudioInfo(url, file_name))
-    return resp.to_json()
+    return jsonify({"code": resp.code, "data": resp.data})
 
 
 @app.route(API_PREFIX + '/async_audio_to_txt', methods=['POST'])
