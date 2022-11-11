@@ -22,6 +22,8 @@ import multiprocessing as mp
 audio to txt service
 """
 
+MUL_PROCESS=False
+
 
 def convert_mp3(filename):
     file_path = Path(filename)
@@ -82,10 +84,16 @@ def asr_to_txt(file):
 
 def audio2txt(filelist):
     # 并行计算
-    num_cores = int(mp.cpu_count() / 2)
-    pool = mp.Pool(num_cores)
-    words = pool.map(asr_to_txt, filelist)
-    pool.close()
+    if MUL_PROCESS:
+        num_cores = int(mp.cpu_count() / 2)
+        pool = mp.Pool(num_cores)
+        words = pool.map(asr_to_txt, filelist)
+        pool.close()
+    else:
+        words = []
+        for file in filelist:
+            result = asr_to_txt(file)
+            words.append(result)
     return words
 
 
