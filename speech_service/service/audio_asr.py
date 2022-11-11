@@ -66,6 +66,7 @@ def audio2txt(filelist):
     text_executor = TextExecutor()
     words = []
     for file in filelist:
+        logger.info("audio to txt {}", file)
         text = asr_executor(
             audio_file=file,
             device=paddle.get_device())
@@ -105,11 +106,11 @@ class AudioService(object):
         file = audio_info.file_name
         logger.info("download url done {} file name {}", audio_info.url, audio_info.file_name)
         file = convert_mp3(file)
-        file_segments = split(file, 60)
+        file_segments = split(file, 40)
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
-        words = audio2txt(file_segments[0:2])
+        words = audio2txt(file_segments[0:])
         all_text = "".join(words)
         logger.info("end audio to text")
         for file in file_segments:
