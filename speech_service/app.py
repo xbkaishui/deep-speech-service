@@ -75,7 +75,7 @@ def callback():
     return "ok"
 
 
-# @app.errorhandler(Exception)
+@app.errorhandler(Exception)
 def error_handler(e):
     """
     global exception handler
