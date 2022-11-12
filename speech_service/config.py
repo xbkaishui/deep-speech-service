@@ -16,5 +16,7 @@ LOG_PATH: str = config("LOG_PATH", cast=str, default="logs")
 
 DATA_DIR = config("DATA_DIR", cast=str, default="data")
 
+MAX_CPU = config("MAX_CPU", cast=int, default=8)
+
 if platform == "darwin":
     ...

@@ -57,4 +57,4 @@ class Response(object):
         self.data = data
 
     def to_json(self):
-        return json.dumps({"code": self.code, "data": self.data}, ensure_ascii=False)
+        return json.dumps({"code": self.code, "data": self.data})

@@ -4,13 +4,7 @@ from pathlib import Path
 from loguru import logger
 import moviepy.editor as mp
 from speech_service.model import VideoInfo, Response
-import os
-import warnings
-
 from speech_service.service.audio_asr import download_file, AudioService
-
-warnings.filterwarnings('ignore')
-
 
 """
 video to txt service
