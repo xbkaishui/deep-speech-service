@@ -9,7 +9,8 @@ from .service.audio_asr import AudioService
 from .service.video_asr import VideoService
 from .model import AudioInfo, VideoInfo
 from .remote_actor import RemoteSpeechActor
-from pathos.pools import ProcessPool as Pool
+# from pathos.pools import ProcessPool as Pool
+from pathos.pools import ThreadPool as Pool
 from .config import MAX_CPU
 
 app = Flask(__name__)
