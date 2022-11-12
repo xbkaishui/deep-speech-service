@@ -15,8 +15,6 @@ import paddle
 from paddlespeech.cli.asr.infer import ASRExecutor
 from paddlespeech.cli.text.infer import TextExecutor
 from datetime import datetime
-import multiprocessing as mp
-
 
 """
 audio to txt service
@@ -83,17 +81,17 @@ def asr_to_txt(file):
 
 
 def audio2txt(filelist):
-    # 并行计算
-    if MUL_PROCESS:
-        num_cores = int(mp.cpu_count() / 2)
-        pool = mp.Pool(num_cores)
-        words = pool.map(asr_to_txt, filelist)
-        pool.close()
-    else:
-        words = []
-        for file in filelist:
-            result = asr_to_txt(file)
-            words.append(result)
+    # # 并行计算
+    # if MUL_PROCESS:
+    #     num_cores = int(mp.cpu_count() / 2)
+    #     pool = mp.Pool(num_cores)
+    #     words = pool.map(asr_to_txt, filelist)
+    #     pool.close()
+    # else:
+    words = []
+    for file in filelist:
+        result = asr_to_txt(file)
+        words.append(result)
     return words
 
 
