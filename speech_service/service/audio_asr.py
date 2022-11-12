@@ -22,7 +22,7 @@ import multiprocessing as mp
 audio to txt service
 """
 
-MUL_PROCESS=False
+MUL_PROCESS = False
 
 
 def convert_mp3(filename):
@@ -99,6 +99,9 @@ def audio2txt(filelist):
 
 def download_file(url, local_filename):
     start_time = datetime.now()
+    if os.path.exists(local_filename):
+        logger.warning("file already exists, ignore download url {} , filename {}", url, local_filename)
+        return local_filename
     with requests.get(url, stream=True) as r:
         with open(local_filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
@@ -119,14 +122,28 @@ class AudioService(object):
         download_file(audio_info.url, audio_info.file_name)
         file = audio_info.file_name
         logger.info("download url done {} file name {}", audio_info.url, audio_info.file_name)
-        file = convert_mp3(file)
-        file_segments = split(file, 40)
+        all_text = self.audio_file_to_txt(file)
+        return Response(200, all_text)
+
+    def audio_file_to_txt(self, file):
+        """
+        audio file to txt
+        :param file:
+        :return:
+        """
+        wav_file = convert_mp3(file)
+        file_segments = split(wav_file, 40)
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
         words = audio2txt(file_segments[0:])
         all_text = "".join(words)
         logger.info("end audio to text")
+        self.clean_file(file_segments, wav_file)
+        return all_text
+
+    def clean_file(self, file_segments, wav_file):
         for file in file_segments:
             os.remove(file)
-        return Response(200, all_text)
+        if os.path.exists(wav_file):
+            os.remove(wav_file)
