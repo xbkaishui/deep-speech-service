@@ -15,6 +15,7 @@ import paddle
 from paddlespeech.cli.asr.infer import ASRExecutor
 from paddlespeech.cli.text.infer import TextExecutor
 from datetime import datetime
+import math
 
 """
 audio to txt service
@@ -42,7 +43,7 @@ def split(file: str, seconds_per_split_file: int):
     sound = AudioSegment.from_wav(file)
     seconds_of_file = sound.duration_seconds
     logger.info("file {} duration {}", file, sound.duration_seconds)
-    times = int(int(seconds_of_file) / seconds_per_split_file)
+    times = math.ceil(int(seconds_of_file) / seconds_per_split_file)
     logger.info("file {} split times {}", file, times)
     start_time = 0
     internal = seconds_per_split_file * 1000

@@ -9,8 +9,9 @@ def test_convert_mp3():
 
 
 def test_split():
-    file_name = "12.wav"
-    split_files = split(file_name, 80)
+    file_name = "/tmp/202210171520035574.mp3"
+    wav_file = convert_mp3(file_name)
+    split_files = split(wav_file, 40)
     logger.info("split files {}", split_files)
 
 
