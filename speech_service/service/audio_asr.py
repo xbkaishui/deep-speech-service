@@ -101,7 +101,7 @@ def download_file(url, local_filename):
     if os.path.exists(local_filename):
         logger.warning("file already exists, ignore download url {} , filename {}", url, local_filename)
         return local_filename
-    with requests.get(url, stream=True) as r:
+    with requests.get(url, stream=True, verify=False) as r:
         with open(local_filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
     end_time = datetime.now()
