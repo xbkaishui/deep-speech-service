@@ -120,10 +120,13 @@ class AudioService(object):
     def audio_to_txt(self, audio_info: AudioInfo) -> Response:
         if audio_info.file_name is None:
             audio_info.file_name = audio_info.url.split('/')[-1]
+        start_time = datetime.now()
         download_file(audio_info.url, audio_info.file_name)
         file = audio_info.file_name
         logger.info("download url done {} file name {}", audio_info.url, audio_info.file_name)
         all_text = self.audio_file_to_txt(file)
+        end_time = datetime.now()
+        logger.info("{} end audio to text total cost {} s", audio_info.url, (end_time - start_time))
         return Response(200, all_text)
 
     def audio_file_to_txt(self, file):
@@ -139,7 +142,6 @@ class AudioService(object):
         logger.info("start audio to text")
         words = audio2txt(file_segments[0:])
         all_text = "".join(words)
-        logger.info("end audio to text")
         self.clean_file(file_segments, wav_file)
         return all_text
 
