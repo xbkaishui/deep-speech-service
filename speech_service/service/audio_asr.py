@@ -101,11 +101,13 @@ def download_file(url, local_filename):
     if os.path.exists(local_filename):
         logger.warning("file already exists, ignore download url {} , filename {}", url, local_filename)
         return local_filename
-    with requests.get(url, stream=True, verify=False) as r:
+    with requests.get(url, stream=False, verify=False, allow_redirects=True) as r:
+        r.raise_for_status()
         with open(local_filename, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
+            f.write(r.content)
+            # shutil.copyfileobj(r.raw, f)
     end_time = datetime.now()
-    logger.info("download url cost {}s", (end_time - start_time))
+    logger.info("download url {} cost {}s", url, (end_time - start_time))
 
 
 class AudioService(object):
