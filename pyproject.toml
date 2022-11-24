@@ -17,6 +17,7 @@ starlette = "^0.21.0"
 pytest = "^7.2.0"
 pathos = "^0.3.0"
 ray = "^2.1.0"
+gunicorn = "^20.1.0"
 
 [[tool.poetry.source]]
 name = "aliyun"

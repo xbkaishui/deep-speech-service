@@ -90,3 +90,4 @@ def error_handler(e):
     }
     logger.error(str(e), e)
     return jsonify(data)
+
