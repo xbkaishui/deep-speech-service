@@ -18,5 +18,8 @@ DATA_DIR = config("DATA_DIR", cast=str, default="data")
 
 MAX_CPU = config("MAX_CPU", cast=int, default=8)
 
+# set gpu count for paddle
+GPU_COUNT = config("GPU_COUNT", cast=int, default=2)
+
 if platform == "darwin":
     ...

@@ -4,7 +4,7 @@ import os.path
 from loguru import logger
 from pydub import AudioSegment
 from pathlib import Path
-from speech_service.config import DATA_DIR
+from speech_service.config import DATA_DIR, GPU_COUNT
 from speech_service.model import AudioInfo, Response
 import requests
 import shutil
@@ -16,12 +16,28 @@ from paddlespeech.cli.asr.infer import ASRExecutor
 from paddlespeech.cli.text.infer import TextExecutor
 from datetime import datetime
 import math
+import random
 
 """
 audio to txt service
 """
 
 MUL_PROCESS = False
+random.seed(1)
+
+
+def select_device() -> str:
+    """
+    random chooice gpu device
+    :return:
+    """
+    device = paddle.get_device()
+    if 'gpu' in device:
+        selected_gpu = random.randint(0, GPU_COUNT)
+        selected_device = f'gpu:{selected_gpu}'
+    else:
+        selected_device = device
+    return selected_device
 
 
 def convert_mp3(filename):
@@ -66,16 +82,17 @@ def split(file: str, seconds_per_split_file: int):
 def asr_to_txt(file):
     asr_executor = ASRExecutor()
     text_executor = TextExecutor()
-    logger.info("audio to txt {}", file)
+    device = select_device()
+    logger.info("audio to txt {} device {}", file, device)
     text = asr_executor(
         audio_file=file,
-        device=paddle.get_device())
+        device=device)
     if text:
         result = text_executor(
             text=text,
             task='punc',
             model='ernie_linear_p3_wudao',
-            device=paddle.get_device())
+            device=device)
     else:
         result = text
     return result
