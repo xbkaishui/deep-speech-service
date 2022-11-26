@@ -21,5 +21,8 @@ MAX_CPU = config("MAX_CPU", cast=int, default=8)
 # set gpu count for paddle
 GPU_COUNT = config("GPU_COUNT", cast=int, default=2)
 
+os.environ['FLAGS_fraction_of_gpu_memory_to_use'] = "0.99"
+os.environ["FLAGS_eager_delete_tensor_gb"] = "0"
+
 if platform == "darwin":
     ...
