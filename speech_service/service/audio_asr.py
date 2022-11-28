@@ -17,6 +17,8 @@ from paddlespeech.cli.text.infer import TextExecutor
 from datetime import datetime
 import math
 import random
+from speech_service.service.websocket_asr_client import asr_client
+from speech_service.service.service_util import parse_timeline
 
 """
 audio to txt service
@@ -24,6 +26,8 @@ audio to txt service
 
 MUL_PROCESS = False
 random.seed(1)
+
+SEGMENT_SIZE = 40
 
 
 def select_device() -> str:
@@ -113,6 +117,16 @@ def audio2txt(filelist):
     return words
 
 
+def audio2timeline(filelist):
+    timelines = []
+    file_cnt = len(filelist)
+    for i in range(file_cnt):
+        wav_file = filelist[i]
+        asr_result = asr_client(wavfile=wav_file)
+        timelines.extend(parse_timeline(asr_result, SEGMENT_SIZE * i))
+    return timelines
+
+
 def download_file(url, local_filename):
     start_time = datetime.now()
     if os.path.exists(local_filename):
@@ -144,6 +158,7 @@ class AudioService(object):
         all_text = self.audio_file_to_txt(file)
         end_time = datetime.now()
         logger.info("{} end audio to text total cost {} s", audio_info.url, (end_time - start_time))
+        logger.info("url {} resp text {} s", audio_info.url, all_text)
         return Response(200, all_text)
 
     def audio_file_to_txt(self, file):
@@ -153,7 +168,7 @@ class AudioService(object):
         :return:
         """
         wav_file = convert_mp3(file)
-        file_segments = split(wav_file, 40)
+        file_segments = split(wav_file, SEGMENT_SIZE)
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
@@ -161,6 +176,21 @@ class AudioService(object):
         all_text = "".join(words)
         self.clean_file(file_segments, wav_file)
         return all_text
+
+    def audio_file_to_timeline(self, file):
+        """
+           audio file to timeline files
+           :param file:
+           :return:
+       """
+        wav_file = convert_mp3(file)
+        file_segments = split(wav_file, SEGMENT_SIZE)
+        logger.info("split file {}", file_segments)
+        # call seg to txt
+        logger.info("start audio to text")
+        timelines = audio2timeline(file_segments[:1])
+        self.clean_file(file_segments, wav_file)
+        return timelines
 
     def clean_file(self, file_segments, wav_file):
         for file in file_segments:

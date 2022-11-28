@@ -47,6 +47,17 @@ def video_to_txt():
     return jsonify({"code": resp.code, "data": resp.data})
 
 
+@app.route(API_PREFIX + '/video_to_timeline', methods=['POST'])
+def video_to_timeline():
+    msg = request.get_json()
+    logger.info("recv video_to_txt {}", msg)
+    url = msg["url"]
+    file_name = msg["file_name"]
+    video_service = VideoService()
+    resp = video_service.video_to_timeline(VideoInfo(url, file_name))
+    return jsonify({"code": resp.code, "data": resp.data})
+
+
 @app.route(API_PREFIX + '/async_audio_to_txt', methods=['POST'])
 def async_audio_to_txt():
     msg = request.get_json()
