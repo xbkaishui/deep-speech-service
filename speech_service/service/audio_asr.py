@@ -188,7 +188,7 @@ class AudioService(object):
         logger.info("split file {}", file_segments)
         # call seg to txt
         logger.info("start audio to text")
-        timelines = audio2timeline(file_segments[:1])
+        timelines = audio2timeline(file_segments[:])
         self.clean_file(file_segments, wav_file)
         return timelines
 
